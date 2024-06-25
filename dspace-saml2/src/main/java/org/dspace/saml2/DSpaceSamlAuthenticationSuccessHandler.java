@@ -46,6 +46,11 @@ public class DSpaceSamlAuthenticationSuccessHandler implements AuthenticationSuc
         Saml2AuthenticatedPrincipal principal = (Saml2AuthenticatedPrincipal) authentication.getPrincipal();
         String relyingPartyId = principal.getRelyingPartyRegistrationId();
         Map<String, List<Object>> samlAttributes = principal.getAttributes();
+        samlAttributes.forEach((attributeName, values) -> {
+            values.forEach(value -> {
+                logger.info("Incoming SAML attribute: {} = {}", attributeName, value);
+            });
+        });
 
         setRequestAttributesFromSamlAttributes(request, relyingPartyId, samlAttributes);
 
@@ -89,6 +94,8 @@ public class DSpaceSamlAuthenticationSuccessHandler implements AuthenticationSuc
 
                 if (values != null) {
                     request.setAttribute(requestAttributeName, values);
+                } else {
+                    logger.warn("No value found for SAML attribute {} in assertion", samlAttributeName);
                 }
             });
     }
