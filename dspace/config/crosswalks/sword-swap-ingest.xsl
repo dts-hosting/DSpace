@@ -62,12 +62,26 @@
     		</xsl:element>
     	</xsl:if>
     	
-    	<!-- language element: dc.language.iso -->
-    	<xsl:if test="./@epdcx:propertyURI='http://purl.org/dc/elements/1.1/language' and ./@epdcx:vesURI='http://purl.org/dc/terms/RFC3066'">
-    		<dim:field mdschema="dc" element="language" qualifier="rfc3066">
-    			<xsl:value-of select="epdcx:valueString"/>
-    		</dim:field>
-    	</xsl:if>
+    	<!-- language element: dc.language, dc.language.iso, dc.language.rfc3066 -->
+    	<xsl:if test="./@epdcx:propertyURI='http://purl.org/dc/elements/1.1/language'">
+      <xsl:choose>
+      <xsl:when test="./@epdcx:vesURI='http://purl.org/dc/terms/RFC3066'">
+        <dim:field mdschema="dc" element="language" qualifier="rfc3066">
+          <xsl:value-of select="epdcx:valueString"/>
+        </dim:field>
+      </xsl:when>
+      <xsl:when test="./@epdcx:vesURI='http://purl.org/dc/terms/ISO639-2' or ./@epdcx:vesURI='http://purl.org/dc/terms/ISO639-3'">
+        <dim:field mdschema="dc" element="language" qualifier="iso">
+          <xsl:value-of select="epdcx:valueString"/>
+        </dim:field>
+      </xsl:when>
+      <xsl:otherwise>
+        <dim:field mdschema="dc" element="language">
+          <xsl:value-of select="epdcx:valueString"/>
+        </dim:field>
+      </xsl:otherwise>
+      </xsl:choose>
+      </xsl:if>
     	
     	<!-- item type element: dc.type -->
     	<xsl:if test="./@epdcx:propertyURI='http://purl.org/dc/elements/1.1/type' and ./@epdcx:vesURI='http://purl.org/eprint/terms/Type'">
@@ -107,6 +121,20 @@
                 <xsl:value-of select="epdcx:valueString"/>
             </dim:field>
         </xsl:if>
+    	
+			<!-- subject categories: dc.subject -->
+			<xsl:if test="./@epdcx:propertyURI='http://purl.org/dc/elements/1.1/subject'">
+				<dim:field mdschema="dc" element="subject">
+					<xsl:value-of select="epdcx:valueString"/>
+				</dim:field>
+			</xsl:if>
+			
+			<!-- advisor element: dc.contributor.advisor -->
+			<xsl:if test="./@epdcx:propertyURI='http://purl.org/dc/elements/1.1/advisor'">
+				<dim:field mdschema="dc" element="contributor" qualifier="advisor">
+					<xsl:value-of select="epdcx:valueString"/>
+				</dim:field>
+			</xsl:if>
     	
     </xsl:template>
     
