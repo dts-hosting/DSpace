@@ -1,7 +1,7 @@
 #!/bin/bash
 export AWS_PROFILE=dspacedirect
 export SOLR_VERSION=9.10.1
-export DSPACE_VERSION=9_x
+export DSPACE_VERSION=9.3
 export DRYRUN=true
 
 if [ "$DRYRUN" == true ]; then
